@@ -12,6 +12,8 @@ Vue.use(ElementsUI, Loading, Notification, MessageBox);
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false
 
+axios.defaults.baseURL = 'http://95.216.143.170:9000'
+
 new Vue({
   router,
   render: h => h(App),

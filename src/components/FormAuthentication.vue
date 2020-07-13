@@ -1,30 +1,28 @@
 <template>
-    <el-container class="form-wrapper"
-                  v-loading.fullscreen.lock="isLoading">
-        <el-form class="form-wrapper__form-authentication" :model="validateForm" ref="formOfAuthentication">
+    <el-container class="form-wrapper form-wrapper_pos_center" v-loading="isLoading">
+        <el-form
+                class="form-wrapper__form"
+                :model="authForm"
+                :rules="rules"
+                ref="authForm">
             <el-header class="form-wrapper__title" style="height: 10px">Вход</el-header>
             <el-divider></el-divider>
             <el-form-item
-                    prop="email"
-                    label="Email"
-                    :rules="[
-                        { required: true, message: 'Введите email', trigger: 'blur' },
-                        { type: 'email', message: 'Некорректный email', trigger: ['blur', 'change'] } ]">
-                <el-input v-model="validateForm.email" size="medium"></el-input>
+                    prop="username"
+                    label="Email">
+                <el-input v-model="authForm.username"></el-input>
             </el-form-item>
             <el-form-item
                     prop="password"
-                    label="Пароль"
-                    :rules="[
-                        { required: true, message: 'Введите пароль', trigger: ['blur', 'change'] } ]">
-                <el-input type="password" v-model="validateForm.password" size="medium" show-password
-                          @keyup.enter="submitForm('formOfAuthentication')">Войти>
+                    label="Пароль">
+                <el-input type="password" v-model="authForm.password" size="medium" show-password
+                          @keyup.enter="submitForm('authForm')">Войти>
                 </el-input>
             </el-form-item>
             <el-form-item class="form-buttons">
-                <el-button type="primary" @click="submitForm('formOfAuthentication')">Войти</el-button>
+                <el-button type="primary" @click="submitForm('authForm')">Войти</el-button>
                 <el-button @click="loadFormRegistration">Регистрация</el-button>
-                <el-button @click="resetForm('formOfAuthentication')">Сбросить</el-button>
+                <el-button @click="resetForm('authForm')">Сбросить</el-button>
             </el-form-item>
         </el-form>
     </el-container>
@@ -34,29 +32,71 @@
     export default {
         name: "FormAuthentication",
         data() {
+            let validatePass = (rule, value, callback) => {
+                if (value === '')
+                    callback(new Error('Пожалуйста, введите пароль!'));
+
+                callback();
+
+            };
+            let validateEmail = (rule, value, callback) => {
+                let regexp = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/
+
+                if (value === '')
+                    callback(new Error('Введите email!'));
+                else if (!regexp.test(value))
+                    callback(new Error('Неверный email'));
+                else
+                    callback();
+
+            };
             return {
-                validateForm: {
+                authForm: {
+                    username: '',
                     password: '',
-                    email: ''
                 },
-                isLoading: false
+                isLoading: false,
+                rules: {
+                    password: [
+                        {validator: validatePass, trigger: 'blur'}
+                    ],
+                    username: [
+                        {validator: validateEmail, trigger: 'blur'}
+                    ]
+                }
             };
         },
         methods: {
             submitForm: function (formName) {
-
-                /*fetch('http://localhost:8081/message/2', {
-                    method: 'DELETE'
-                }).then(result => console.log(result))*/
-
-                fetch('/message/2').then(response => response.json().then(console.log))
-
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         this.isLoading = true;
-                        setTimeout(() => {
-                            this.isLoading = false;
-                        }, 2000);
+
+                        const authJson = JSON.stringify(this.authForm)
+
+                        const options = {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            data: authJson,
+                            url: '/authenticate'
+                        };
+
+                        this.$http(options).then(result => {
+                            console.log(result.status)
+                        }).catch((error) => {
+                            if (error.response.status === 401) {
+                                this.$notify.error({
+                                    title: 'Ошибка',
+                                    message: 'Неверный email или пароль!'
+                                });
+                            } else {
+                                this.$notify.error({
+                                    title: 'Ошибка',
+                                    message: 'Что-то пошло не так!'
+                                });
+                            }
+                        }).finally(() => this.isLoading = false)
+
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -67,36 +107,34 @@
                 this.$refs[formName].resetFields();
             },
             loadFormRegistration: function () {
-                this.$router.push('registration')
+                this.$router.push('registration');
             }
         }
     }
 </script>
 
-<style scoped>
+<style>
     .form-wrapper {
-        display: flex;
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
         height: 100vh;
         width: 100%;
     }
 
-    .form-wrapper__form-authentication {
+    .form-wrapper__form {
         border: 1px solid #DCDFE6;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
         border-radius: 4px;
         padding: 40px 40px;
     }
 
-    .form-wrapper__title {
-        font-size: 18px;
+    .form-wrapper_pos_center {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
     }
 
-    .form-buttons__button {
-        text-decoration: none;
-        color: white;
+    .form-wrapper__title {
+        font-size: 18px;
     }
 
 </style>
