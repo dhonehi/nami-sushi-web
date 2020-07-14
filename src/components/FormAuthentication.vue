@@ -34,10 +34,9 @@
         data() {
             let validatePass = (rule, value, callback) => {
                 if (value === '')
-                    callback(new Error('Пожалуйста, введите пароль!'));
+                    callback(new Error('Введите пароль!'));
 
                 callback();
-
             };
             let validateEmail = (rule, value, callback) => {
                 let regexp = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/
@@ -81,8 +80,8 @@
                             url: '/authenticate'
                         };
 
-                        this.$http(options).then(result => {
-                            console.log(result.status)
+                        this.$http(options).then(() => {
+                            this.$router.push('/');
                         }).catch((error) => {
                             if (error.response.status === 401) {
                                 this.$notify.error({

@@ -46,7 +46,7 @@
         data() {
             let validatePass = (rule, value, callback) => {
                 if (value === '')
-                    callback(new Error('Пожалуйста, введите пароль!'));
+                    callback(new Error('Введите пароль!'));
                 else if (this.regForm.checkPass !== '')
                     this.$refs.regForm.validateField('checkPass');
 
@@ -55,7 +55,7 @@
             };
             let validatePass2 = (rule, value, callback) => {
                 if (value === '')
-                    callback(new Error('Пожалуйста, снова введите пароль!'));
+                    callback(new Error('Повторите пароль!'));
                 else if (value !== this.regForm.password)
                     callback(new Error('Пароли не совпадают!'));
                 else

@@ -7,6 +7,7 @@ import {Loading} from 'element-ui';
 import {Notification} from 'element-ui';
 import {MessageBox} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import store from './store/store.js'
 
 Vue.use(ElementsUI, Loading, Notification, MessageBox);
 Vue.prototype.$http = axios;
@@ -16,5 +17,6 @@ axios.defaults.baseURL = 'http://95.216.143.170:9000'
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

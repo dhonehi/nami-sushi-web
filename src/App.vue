@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <router-view/>
+        <router-view />
     </div>
 </template>
 
@@ -16,28 +16,17 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+        height: 100vh;
+        width: 100vw;
     }
-
-
-    /* .el-table__row {
-         .cell {
-             &:last-child{ text-align: center; }
-         }
-     }
-
-     .has-gutter {
-         .cell {
-             &:last-child{ text-align: center; }
-         }
-     }*/
 
 </style>
 <script>
-    //import SideBar from "./components/SideBar";
+    //import Pages from "./components/Pages";
 
     export default {
         components: {
-            //SideBar
+
         }
     }
 </script>
