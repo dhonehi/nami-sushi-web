@@ -7,7 +7,8 @@ import {Loading} from 'element-ui';
 import {Notification} from 'element-ui';
 import {MessageBox} from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import store from './store/store.js'
+import store from './store'
+
 
 Vue.use(ElementsUI, Loading, Notification, MessageBox);
 Vue.prototype.$http = axios;

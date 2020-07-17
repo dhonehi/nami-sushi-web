@@ -1,19 +1,23 @@
 <template>
     <div>
-        <h3>Hello</h3>
+
     </div>
 </template>
 
 <script>
     export default {
         name: "Profile",
+        data() {
+            return {
+            }
+        },
         mounted() {
-            this.$store.commit('setSideBarActive', 'profile')
+            this.$store.commit('pages/setSideBarActive', 'profile')
         }
 
     }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

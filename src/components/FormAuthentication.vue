@@ -71,19 +71,12 @@
                     if (valid) {
                         this.isLoading = true;
 
-                        const authJson = JSON.stringify(this.authForm)
+                        const authJson = JSON.stringify(this.authForm);
 
-                        const options = {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            data: authJson,
-                            url: '/authenticate'
-                        };
-
-                        this.$http(options).then(() => {
-                            this.$router.push('/');
-                        }).catch((error) => {
-                            if (error.response.status === 401) {
+                        this.$store.dispatch('user/logIn', authJson).then(response => {
+                            this.isLoading = false;
+                            if (response.status === 200) this.$router.push('/')
+                            else if (response.status === 401) {
                                 this.$notify.error({
                                     title: 'Ошибка',
                                     message: 'Неверный email или пароль!'
@@ -94,8 +87,7 @@
                                     message: 'Что-то пошло не так!'
                                 });
                             }
-                        }).finally(() => this.isLoading = false)
-
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
