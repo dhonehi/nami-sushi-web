@@ -2,7 +2,11 @@
     <el-container direction="vertical">
         <top-bar/>
         <el-main class="page-wrapper">
-            <router-view/>
+            <div class="page-content scrollable">
+                <div class="content">
+                    <router-view/>
+                </div>
+            </div>
         </el-main>
     </el-container>
 </template>
@@ -24,7 +28,21 @@
 </script>
 
 <style lang="scss" scoped>
-    .page-wrapper {
+    .scrollable {
+        overflow: auto;
+    }
+
+    .page-content {
+        width: 100%;
+        height: 100%;
+    }
+    .content {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+        width: 60%;
+
+        @media screen and (max-width: 1010px) {
+            width: 100%;
+        }
     }
 
 </style>

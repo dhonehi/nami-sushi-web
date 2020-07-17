@@ -1,7 +1,8 @@
 <template>
-    <div class="main-container">
-        <div class="main-content">
-            <el-select style="margin: 15px 0" size="mini" v-model="value" placeholder="Категории">
+    <div class="main-page-content">
+        <div class="header">
+            <el-select @change="sortingByCategory" style="margin: 15px 0" size="mini" v-model="value"
+                       placeholder="Категории">
                 <el-option
                         v-for="item in categories"
                         :key="item._id"
@@ -9,9 +10,11 @@
                         :value="item.name">
                 </el-option>
             </el-select>
+        </div>
+        <div class="goods">
             <el-table
                     v-loading="isLoading"
-                    :data="products.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+                    :data="productsData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
                     style="width: 100%">
                 <el-table-column type="expand">
                     <template slot-scope="scope">
@@ -22,6 +25,7 @@
                 <el-table-column>
                     <template slot-scope="scope">
                         <el-image
+                                lazy
                                 style="width: 100px; height: 100px"
                                 :src="scope.row.images[0]"
                                 :fit="fit"></el-image>
@@ -50,8 +54,10 @@
                                 placeholder="Поиск товара"/>
                     </template>
                     <template slot-scope="scope">
-                        <el-tooltip effect="light" content="В корзину" placement="top">
-                            <el-button size="mini" type="success" icon="el-icon-shopping-cart-2" circle></el-button>
+                        <el-tooltip effect="light" :content="scope.row.active ? 'В корзину' : 'Товар не доступен'"
+                                    placement="top">
+                            <el-button :disabled="!scope.row.active" size="mini" type="success"
+                                       icon="el-icon-shopping-cart-2" circle></el-button>
                         </el-tooltip>
                         <el-tooltip effect="light" content="В избранное" placement="top">
                             <el-button size="mini" type="warning" icon="el-icon-star-off" circle></el-button>
@@ -84,8 +90,10 @@
             this.isLoading = true;
             this.$store.commit('pages/setSideBarActive', 'main');
             this.loadData().then(status => {
-                this.isLoading = false
-                this.isValidResponse(status);
+                this.isLoading = false;
+                const isValid = this.isValidResponse(status);
+                if (isValid)
+                    this.productsData = this.products()
             })
         },
         data() {
@@ -93,41 +101,55 @@
                 search: '',
                 fit: 'fill',
                 isLoading: false,
-                value: '',
+                value: 'Все категории',
+                productsData: []
             }
         },
-        computed: mapGetters('products', ['products', 'categories']),
+        computed: mapGetters('products', ['categories']),
         methods: {
             ...mapActions('products', ['loadData']),
-
-            isValidResponse(status) {
+            ...mapGetters('products', ['products', 'productsByCategory']),
+            isValidResponse(status, isFirstLoad = true) {
                 if (status !== 200) {
                     this.$notify.error({
                         title: 'Ошибка',
                         message: 'Что-то пошло не так!'
                     })
+                    return false
+                } else {
+                    if (!isFirstLoad)
+                        this.$notify.success({
+                            title: 'Успех',
+                            message: 'Успешно обновлено!'
+                        })
+                    return true
                 }
             },
-
             refreshData() {
                 this.isLoading = true
                 this.loadData().then(status => {
-                    this.isLoading = false
-                    this.isValidResponse(status);
+                    this.isLoading = false;
+                    const isValid = this.isValidResponse(status, false);
+                    if (isValid)
+                        this.productsData = this.products()
                 })
+            },
+            sortingByCategory(category) {
+                this.productsData = this.productsByCategory()(category);
             }
         }
     }
 </script>
 
 <style lang="scss">
-    .main-container {
+    .page-content {
         width: 100%;
         height: 100%;
         overflow: auto;
 
     }
-    .main-content {
+
+    .content {
         margin: 0 auto;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
         width: 60%;
@@ -136,6 +158,4 @@
             width: 100%;
         }
     }
-
-    .main-container::-webkit-scrollbar {width:0px;}
 </style>

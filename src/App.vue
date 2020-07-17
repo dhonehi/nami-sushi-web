@@ -21,12 +21,11 @@
     }
 
 </style>
+
 <script>
-    //import Pages from "./components/Pages";
-
     export default {
-        components: {
-
+        mounted() {
+            if (!this.$store.state.user.user.isLoggedIn) this.$router.push('login');
         }
     }
 </script>
