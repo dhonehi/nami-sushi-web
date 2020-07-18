@@ -69,9 +69,7 @@
             submitForm: function (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.isLoading = true;
-
-                        const authJson = JSON.stringify(this.authForm);
+                       const authJson = JSON.stringify(this.authForm);
 
                         this.$store.dispatch('user/logIn', authJson).then(response => {
                             this.isLoading = false;

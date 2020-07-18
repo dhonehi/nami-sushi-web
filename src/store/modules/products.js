@@ -51,7 +51,7 @@ const mutations = {
 }
 
 const actions = {
-    async loadData({commit}) {
+     loadData({commit}) {
 
         const products = axios.get('http://95.216.143.170:9000/products')
         const categories = axios.get('http://95.216.143.170:9000/categories')

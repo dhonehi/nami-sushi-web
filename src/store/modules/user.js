@@ -57,6 +57,7 @@ const actions = {
         };
         return axios(options).then(response => {
             commit('saveUser', {...response.data, email: userData.email})
+            console.log(response.data)
             return response
         }).catch(error => {
             return error.response
