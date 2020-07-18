@@ -11,10 +11,36 @@ import store from './store'
 
 
 Vue.use(ElementsUI, Loading, Notification, MessageBox);
-Vue.prototype.$http = axios;
-Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://95.216.143.170:9000'
+
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_HOST;
+
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+axios.interceptors.request.use( function (config) {
+  if (store.state.user.isLoggedIn) {
+    const token = store.state.user.token;
+    config.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+axios.interceptors.response.use(undefined, (error) => {
+  if (error.response.status === 401) {
+    store.dispatch('user/logOut');
+  }
+  return Promise.reject(error);
+});
+
+Vue.prototype.$http = axios;
+
+// set language to EN
+import lang from 'element-ui/lib/locale/lang/en';
+import locale from 'element-ui/lib/locale';
+
+locale.use(lang);
+
+Vue.config.productionTip = false;
 
 new Vue({
   router,

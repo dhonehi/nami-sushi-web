@@ -12,29 +12,27 @@
             </el-select>
         </header>
         <div class="home__body">
-            <el-card class="box-card">
-                <div class="products-item">
-                    <el-image
-                            style="width: 100px; height: 100px"
-                            :src="url"
-                            :fit="fit">
-                    </el-image>
-                    <div class="products-item__name">
-
-                    </div>
-                    <div class="products-item__description">
-
-                    </div>
-                    <div class="products-item__footer">
-                        <div class="products-item__price">
-
+            <div class="products">
+                <el-card class="box-card" v-for="product in productsData" :key="product._id">
+                    <div class="products__item">
+                        <img :src="`http://95.216.143.170:9000/image/${product.images[0]}`" alt="">
+                        <div class="products__item-name">
+                            <span>{{product.name}}</span>
                         </div>
-                        <div class="products-item__buy">
-
+                        <div class="products__item-description">
+                            <span>{{product.description}}</span>
+                        </div>
+                        <div class="products__item-footer">
+                            <div class="product__item-cost">
+                                <span>{{product.price}}</span>
+                            </div>
+                            <div class="products__item-btn">
+                                <button>Купить</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </el-card>
+                </el-card>
+            </div>
         </div>
     </div>
 </template>
@@ -44,14 +42,15 @@
         name: "MainPage",
         components: {},
         mounted() {
-            this.isLoading = true;
+            this.loadData();
+/*            this.isLoading = true;
             this.$store.commit('pages/setSideBarActive', 'main');
             this.loadData().then(status => {
                 this.isLoading = false;
                 const isValid = this.isValidResponse(status);
                 if (isValid)
                     this.productsData = this.products()
-            })
+            })*/
         },
         data() {
             return {
@@ -62,6 +61,17 @@
                 productsData: []
             }
         },
+        methods: {
+            loadData: async function () {
+                try {
+                    let response = await this.$http.get(`/products`);
+                    console.log(response);
+                    this.productsData = response.data;
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
         /* computed: mapGetters('products', ['categories']),
          methods: {
              ...mapActions('products', ['loadData']),
@@ -104,5 +114,25 @@
         height: 100%;
         overflow: auto;
 
+    }
+
+    .products {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+
+        >.el-card {
+            margin: 20px;
+        }
+
+        &__item {
+            width: 360px;
+
+            >img {
+                width: 100%;
+                height: 200px;
+                object-fit: contain;
+            }
+        }
     }
 </style>
