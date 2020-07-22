@@ -5,9 +5,31 @@
 </template>
 
 <style lang="scss">
-    body {
+    /* Remove default margin */
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    ul[class],
+    ol[class],
+    li,
+    figure,
+    figcaption,
+    blockquote,
+    dl,
+    dd {
         margin: 0;
-        padding: 0;
+    }
+
+    /* Set core body defaults */
+    body {
+        min-height: 100vh;
+        scroll-behavior: smooth;
+        text-rendering: optimizeSpeed;
+        line-height: 1.5;
+        overflow-x: hidden;
     }
 
     #app {
@@ -16,6 +38,9 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #edeae5;
     }
 
 </style>

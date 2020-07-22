@@ -1,7 +1,7 @@
 <template>
-    <div class="home" :v-loading="isLoading">
+    <div class="home" v-loading.fullscreen="isLoading">
         <header class="home__header">
-            <el-select @change="sortingByCategory" style="margin: 15px 0" size="mini" v-model="value"
+            <el-select @change="sortingByCategory" style="margin: 15px 0" size="medium" v-model="value"
                        placeholder="Категории">
                 <el-option
                         v-for="item in categories"
@@ -10,10 +10,15 @@
                         :value="item.name">
                 </el-option>
             </el-select>
+            <el-input
+                    placeholder="Поиск..."
+                    prefix-icon="el-icon-search"
+                    v-model="search">
+            </el-input>
         </header>
         <div class="home__body">
             <div class="products">
-                <el-card class="box-card" v-for="product in productsData" :key="product._id">
+                <el-card shadow="hover" v-for="product in productsData" :key="product._id">
                     <div class="products__item">
                         <img :src="`${host}/image/${product.images[0]}`" alt="">
                         <div class="products__item-name">
@@ -24,10 +29,10 @@
                         </div>
                         <div class="products__item-footer">
                             <div class="products__item-price">
-                                <span>{{product.price}}</span>
+                                <span><del>ddf</del></span>
                             </div>
                             <div class="products__item-btn">
-                                <button>В корзину</button>
+                                <el-button @click="addToCart" size="mini" type="success">В корзину</el-button>
                             </div>
                         </div>
                     </div>
@@ -51,7 +56,6 @@
                 const isValid = this.isValidResponse(status);
                 if (isValid) {
                     this.productsData = this.products()
-                    console.log('products', this.products())
                 }
             })
         },
@@ -62,6 +66,11 @@
                 isLoading: false,
                 value: 'Все категории',
                 productsData: []
+            }
+        },
+        watch: {
+            search(newValue) {
+                this.productsData = this.products().filter(data => data.name.toLowerCase().includes(newValue.toLowerCase()))
             }
         },
         computed: {
@@ -98,36 +107,51 @@
             },
             sortingByCategory(category) {
                 this.productsData = this.productsByCategory()(category);
+            },
+            addToCart() {
+                console.log('asd')
             }
         }
     }
 </script>
 
 <style lang="scss">
+    .home__header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > .el-select {
+            margin-right: 15px !important;
+        }
+
+        > .el-input {
+            margin-left: 15px;
+            width: 200px;
+        }
+    }
+
     .products {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
 
         > .el-card {
+            background-color: rgba(255, 125, 93, 0.17);
             margin: 20px;
         }
 
         &__item {
-            display: flex;
-            flex-direction: column;
             width: 350px;
 
             &-name {
                 text-align: left;
-                margin-top: 15px;
-                flex-grow: 0;
+                margin-top: 10px;
             }
 
             &-body {
                 text-align: left;
-                margin-top: 25px;
-                flex-grow: 1;
+                margin-top: 20px;
             }
 
             &-footer {
@@ -135,13 +159,28 @@
                 flex-grow: 0;
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
             }
 
+            &-btn {
+                span {
+                    font-size: 1rem;
+                    letter-spacing: 1px
+                }
+            }
+
+            &-price {
+                span {
+                    font-weight: 600;
+                    font-size: 1.2rem;
+                    color: #E6A23C;
+                }
+            }
 
             > img {
                 width: 100%;
-                height: 200px;
-                object-fit: contain;
+                height: 300px;
+                object-fit: fill;
             }
         }
     }

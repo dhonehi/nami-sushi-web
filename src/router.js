@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import FormAuthentication from "./components/FormAuthentication";
 import FormRegistration from "./components/FormRegistration";
-import MainPage from "@/components/MainPage";
+import MainPage1 from "@/components/MainPage1";
 import Profile from "@/components/Profile";
 import Pages from "@/components/Pages";
 
@@ -18,7 +18,7 @@ export default new Router({
             children: [
                 {
                     path: '/main',
-                    component: MainPage
+                    component: MainPage1
                 },
                 {
                     path: '/profile',

@@ -27,7 +27,7 @@ axios.interceptors.request.use( function (config) {
 
 axios.interceptors.response.use(undefined, (error) => {
   if (error.response.status === 401) {
-    store.dispatch('user/logOut');
+    store.commit('user/logOut');
   }
   return Promise.reject(error);
 });

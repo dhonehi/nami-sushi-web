@@ -22,6 +22,7 @@ const state = () => ({
         phone,
         token,
         email,
+        cart: []
     }
 });
 const mutations = {
@@ -46,7 +47,18 @@ const mutations = {
         state.user.token = null;
         state.user.email = null;
     },
+    addToCart(state, product) {
+        if (!state.user.cart.includes(product))
+            state.user.cart.push(product)
+    }
 };
+
+const getters = {
+    userCart(state) {
+        return state.user.cart
+    }
+};
+
 const actions = {
     async logIn({commit}, userData) {
         const options = {
@@ -64,11 +76,12 @@ const actions = {
         })
 
     }
-}
+};
 
 export default {
     namespaced: true,
     state,
+    getters,
     mutations,
     actions
 };

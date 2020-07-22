@@ -2,8 +2,9 @@
     <el-card class="product-card" shadow="hover">
         <div class="product-card__header">
             <img class="product-card__img" :src="`${host}/image/${product.images[0]}`" alt="">
-            <el-tooltip popper-class="pop-custom" class="product-card__fav" effect="light" content="В избранное" placement="bottom-end">
-                <el-button type="warning" icon="el-icon-star-off" circle></el-button>
+            <el-tooltip popper-class="pop-custom" class="product-card__fav" effect="light" content="В избранное"
+                        placement="bottom-end">
+                <el-button size="mini" type="warning" icon="el-icon-star-off" circle></el-button>
             </el-tooltip>
         </div>
         <div class="product-card__body">
@@ -20,7 +21,8 @@
                 <span v-if="product.on_sale"> {{product.sale_price}}  &#8381;</span>
             </div>
             <div class="product-card__btn">
-                <el-button size="mini" type="success">В корзину</el-button>
+                <el-button slot="reference" @click="addToCart(product)" size="mini" type="success">В корзину</el-button>
+                <vertical-select v-model="num"></vertical-select>
             </div>
         </div>
     </el-card>
@@ -28,18 +30,30 @@
 
 <script>
     import {mapState} from 'vuex'
+    import VerticalSelect from "./VerticalSelect";
 
     export default {
         name: "product-card",
+        components: {VerticalSelect},
         props: ['product'],
-        computed: mapState(['host'])
+        computed: mapState(['host']),
+        methods: {
+            addToCart(product) {
+                this.$store.commit('user/addToCart', product)
+            },
+        },
+        data: function () {
+            return {
+                num: 1,
+            }
+        }
     }
 </script>
 
 <style lang="scss">
     .pop-custom {
         border: 1px solid #F2F6FC !important;
-        font-family: Arial,serif;
+        font-family: Arial, serif;
     }
 
     .cross {
@@ -51,6 +65,7 @@
     .product-card {
         position: relative;
         width: 350px;
+        border: 1px solid #DCDFE6 !important;
 
         &__img {
             width: 100%;

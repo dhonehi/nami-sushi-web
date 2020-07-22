@@ -1,14 +1,12 @@
 <template>
-    <el-container direction="vertical">
+    <div>
         <top-bar/>
-        <el-main class="page-wrapper">
-            <div class="page-content scrollable">
-                <div class="content">
-                    <router-view/>
-                </div>
+        <div class="pages-wrapper">
+            <div class="page-content">
+                <router-view />
             </div>
-        </el-main>
-    </el-container>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -21,29 +19,25 @@
         },
         data() {
             return {
-                url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    .scrollable {
-        overflow: auto;
-    }
-
-    .page-wrapper {
+    .pages-wrapper {
         width: 100%;
         height: 100%;
+        margin-top: 80px;
     }
-    .content {
-        margin: 0 auto;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
-        width: 60%;
 
-        @media screen and (max-width: 1010px) {
+    .page-content {
+        margin: 0 auto;
+        width: 1130px;
+
+        @media screen and (max-width: 1100px) {
             width: 100%;
         }
     }
-
 </style>

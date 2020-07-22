@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <el-container style="height: 100vh; width: 100vw" :v-loading="isLoading">
 
-    </div>
+    </el-container>
 </template>
 
 <script>
@@ -9,6 +9,7 @@
         name: "Profile",
         data() {
             return {
+                isLoading: true
             }
         },
         mounted() {

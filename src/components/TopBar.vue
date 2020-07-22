@@ -1,22 +1,26 @@
 <template>
     <div class="header-wrapper">
-        <el-header class="header">
-            <div class="container">
-                <h1>Nami Sushi</h1>
-                <el-menu :default-active="'main'" class="menu" mode="horizontal" @select="handleSelect">
-                    <el-menu-item index="main">Главная</el-menu-item>
-                    <el-menu-item index="favourites">Избранное</el-menu-item>
-                    <el-menu-item index="cart">Корзина</el-menu-item>
-                    <el-menu-item index="logout">Выйти</el-menu-item>
-                </el-menu>
-            </div>
-        </el-header>
+        <header class="header">
+            <h1 style="color: white">Nami Sushi</h1>
+            <el-menu :default-active="'main'" class="menu" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="main">Главная</el-menu-item>
+                <el-menu-item index="favourites">Избранное</el-menu-item>
+                <el-menu-item index="cart">Корзина
+                    <el-badge v-if="userCart.length > 0" :max="99" :value="userCart.length" class="menu__item-badge"
+                              type="primary"/>
+                </el-menu-item>
+                <el-menu-item index="logout">Выйти</el-menu-item>
+            </el-menu>
+        </header>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from 'vuex'
+
     export default {
         name: "top-bar",
+        computed: mapGetters('user', ['userCart']),
         methods: {
             handleSelect: function (key) {
                 if (key === 'logout') {
@@ -31,31 +35,44 @@
 </script>
 
 <style lang="scss" scoped>
+    .menu__item-badge {
+        position: absolute;
+        bottom: 8px;
+    }
+
     .header-wrapper {
         height: 80px;
-        width: 100%;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        z-index: 1;
+        background-color: #51453d;
 
         .header {
+            margin: 0 auto;
+            width: 1130px;
+            height: 60px;
             display: flex;
-            justify-content: center;
+            justify-content: space-around;
+            border-bottom: 1px solid #dcdfe6;
+            background-color: #51453d;
 
-            .container {
-                display: flex;
-                justify-content: space-around;
-                border-bottom: 1px solid #dcdfe6;
-                height: 100%;
-                width: 60%;
+            @media screen and (max-width: 1010px) {
+                width: 100%;
+            }
 
-                @media screen and (max-width: 1010px) {
-                    width: 100%;
+            .menu {
+                background-color: #51453d;
+                border-bottom: none;
+
+                .el-menu-item {
+                    font-weight: normal;
+                    letter-spacing: 1px;
+                    font-size: 1rem;
                 }
 
-                .menu {
-                    border-bottom: none;
-
-                    .el-menu-item:last-child {
-                        margin-left: 25px;
-                    }
+                .el-menu-item:last-child {
+                    margin-left: 25px;
                 }
             }
         }

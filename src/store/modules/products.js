@@ -37,6 +37,11 @@ const getters = {
                 product.categories.some(item => item.name === category)
             )
     },
+    productsByPrice: state => priceArray => {
+        return state.products.filter(product =>
+            product.price >= priceArray[0] && product.price <= priceArray[1]
+        )
+    },
     categories(state) {
         state.categories.unshift({_id: 'all', name: 'Все категории'})
         return state.categories;
@@ -51,14 +56,12 @@ const mutations = {
 }
 
 const actions = {
-     loadData({commit}) {
-
-        const products = axios.get('http://95.216.143.170:9000/products')
-        const categories = axios.get('http://95.216.143.170:9000/categories')
+    loadData({commit}) {
+        const products = axios.get(`${this.state.host}/products`)
+        const categories = axios.get(`${this.state.host}/categories`)
 
         return Promise.all([products, categories]).then(response => {
             response[0].data.forEach(product => {
-                product.images[0] = 'http://95.216.143.170:9000/image/' + product.images[0];
                 if (product.on_sale) product.price = product.sale_price;
             })
             commit('saveData', response);
