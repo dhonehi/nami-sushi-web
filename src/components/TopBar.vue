@@ -1,12 +1,12 @@
 <template>
     <div class="header-wrapper">
         <header class="header">
-            <h1 style="color: white">Nami Sushi</h1>
-            <el-menu :default-active="'main'" class="menu" mode="horizontal" @select="handleSelect">
+            <img class="header__logo" src="../assets/img/logo.png">
+            <el-menu :default-active="sideBarActive" class="menu" mode="horizontal" @select="handleSelect">
                 <el-menu-item index="main">Главная</el-menu-item>
                 <el-menu-item index="favourites">Избранное</el-menu-item>
                 <el-menu-item index="cart">Корзина
-                    <el-badge v-if="userCart.length > 0" :max="99" :value="userCart.length" class="menu__item-badge"
+                    <el-badge v-if="lengthUserCart > 0" :max="99" :value="lengthUserCart" class="menu__item-badge"
                               type="primary"/>
                 </el-menu-item>
                 <el-menu-item index="logout">Выйти</el-menu-item>
@@ -20,7 +20,10 @@
 
     export default {
         name: "top-bar",
-        computed: mapGetters('user', ['userCart']),
+        computed: {
+            ...mapGetters('user', ['lengthUserCart']),
+            ...mapGetters('pages', ['sideBarActive'])
+        },
         methods: {
             handleSelect: function (key) {
                 if (key === 'logout') {
@@ -46,7 +49,7 @@
         position: fixed;
         top: 0;
         z-index: 1;
-        background-color: #51453d;
+        background-color: #ffffff;
 
         .header {
             margin: 0 auto;
@@ -55,14 +58,21 @@
             display: flex;
             justify-content: space-around;
             border-bottom: 1px solid #dcdfe6;
-            background-color: #51453d;
+            padding-top: 10px;
+            //background-color: rgba(90,90,90,0.55);
+
+            &__logo {
+                width: 165px;
+                padding-bottom: 2px;
+                height: 59px;
+            }
 
             @media screen and (max-width: 1010px) {
                 width: 100%;
             }
 
             .menu {
-                background-color: #51453d;
+                //background-color: #384478;
                 border-bottom: none;
 
                 .el-menu-item {

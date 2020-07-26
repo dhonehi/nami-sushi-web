@@ -62,7 +62,7 @@ const actions = {
 
         return Promise.all([products, categories]).then(response => {
             response[0].data.forEach(product => {
-                if (product.on_sale) product.price = product.sale_price;
+                if (product.on_sale) product.regular_price = product.sale_price;
             })
             commit('saveData', response);
             return 200;

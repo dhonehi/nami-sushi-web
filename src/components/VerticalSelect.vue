@@ -13,9 +13,12 @@
             value: {
                 type: Number,
                 required: true
+            },
+            min: {
+                type: Number,
             }
         },
-        data: function() {
+        data: function () {
             return {
                 inputValue: this.value
             }
@@ -26,22 +29,33 @@
                 this.$emit('input', this.inputValue)
             },
             decrement() {
-                this.inputValue--
-                this.$emit('input', this.inputValue)
+                if (this.inputValue !== this.min) {
+                    this.inputValue--
+                    this.$emit('input', this.inputValue)
+                }
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .select {
+        position: relative;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
         .el-button {
+            text-rendering: auto;
             padding: 0;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
+            color: black;
+
+            i {
+                margin: 0;
+                font-size: 1.2rem;
+                font-weight: 900;
+            }
         }
     }
 </style>

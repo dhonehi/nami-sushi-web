@@ -17,12 +17,16 @@
         </div>
         <div class="product-card__footer">
             <div class="product-card__price">
-                <span :class="{'cross': product.on_sale}">{{product.regular_price}}  &#8381;</span>
-                <span v-if="product.on_sale"> {{product.sale_price}}  &#8381;</span>
+                <span :class="{'cross': product.on_sale}">{{product.price}}  &#8381;</span>
+                <span v-if="product.on_sale"> {{product.regular_price}}  &#8381;</span>
             </div>
             <div class="product-card__btn">
-                <el-button slot="reference" @click="addToCart(product)" size="mini" type="success">В корзину</el-button>
-                <vertical-select v-model="num"></vertical-select>
+                <el-button :class="{addedToCart: isAddedToCart}" slot="reference" @click="addToCart"
+                           size="mini" :disabled="isAddedToCart"
+                           type="success">{{isAddedToCart ? 'В КОРЗИНЕ': 'КУПИТЬ'}}
+                </el-button>
+                <vertical-select style="margin-left: 10px" v-if="isAddedToCart"
+                                 v-model="productCount"></vertical-select>
             </div>
         </div>
     </el-card>
@@ -35,22 +39,47 @@
     export default {
         name: "product-card",
         components: {VerticalSelect},
-        props: ['product'],
-        computed: mapState(['host']),
-        methods: {
-            addToCart(product) {
-                this.$store.commit('user/addToCart', product)
-            },
-        },
         data: function () {
             return {
-                num: 1,
+                productCount: this.amountOfProduct()
+            }
+        },
+        props: ['product'],
+        computed: {
+            ...mapState(['host']),
+            isAddedToCart() {
+                return this.$store.getters['user/isAddedToCart'](this.product)
+            }
+        },
+        methods: {
+            addToCart() {
+                this.$store.commit('user/addToCart', this.product);
+                this.productCount = 1
+            },
+            amountOfProduct() {
+                return this.$store.getters['user/amountOfProduct'](this.product)
+            }
+        },
+        watch: {
+            productCount(newVal, oldVal) {
+                if (newVal > oldVal && newVal > 1)
+                    this.$store.commit('user/addToCart', this.product);
+                else if (newVal < oldVal)
+                    this.$store.commit('user/removeFromCart', this.product);
+
             }
         }
     }
 </script>
 
 <style lang="scss">
+    .addedToCart {
+        background-color: #eae8e8 !important;
+        border: 1px solid #eae8e8 !important;
+        color: black !important;
+        font-size: 0.6rem !important;
+    }
+
     .pop-custom {
         border: 1px solid #F2F6FC !important;
         font-family: Arial, serif;
@@ -64,12 +93,12 @@
 
     .product-card {
         position: relative;
-        width: 350px;
+        width: 415px;
         border: 1px solid #DCDFE6 !important;
 
         &__img {
             width: 100%;
-            height: 350px;
+            height: 300px;
         }
 
         &__fav {
@@ -105,6 +134,10 @@
         }
 
         &__btn {
+            display: flex;
+            align-items: center;
+            height: 50px;
+
             .el-button {
                 font-size: 1rem;
                 letter-spacing: 1px;

@@ -1,53 +1,63 @@
 <template>
     <div class="home" v-loading.fullscreen="isLoading">
-        <header class="home__header">
-            <el-select @change="sortingByCategory" style="margin: 15px 0" size="medium" v-model="value"
-                       placeholder="Категории">
-                <el-option
-                        v-for="item in categories"
-                        :key="item._id"
-                        :label="item.name"
-                        :value="item.name">
-                </el-option>
-            </el-select>
-            <el-input
-                    placeholder="Поиск..."
-                    prefix-icon="el-icon-search"
-                    v-model="search">
-            </el-input>
-        </header>
+        <div class="home__filters-container">
+            <div class="home__filters">
+                <div class="home__filters-search">
+                    <el-input
+                            size="mini"
+                            placeholder="Поиск..."
+                            prefix-icon="el-icon-search"
+                            v-model="search">
+                    </el-input>
+                </div>
+                <el-divider></el-divider>
+                <div class="home__filters-category">
+                    <el-select @change="sortingByCategory" style="margin: 15px 0" size="mini" v-model="value"
+                               placeholder="Категории">
+                        <el-option
+                                v-for="item in categories"
+                                :key="item._id"
+                                :label="item.name"
+                                :value="item.name">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="home__filters-price">
+                    <div class="home__filters-price-header">
+                        <span>Цена</span>
+                    </div>
+                    <el-slider
+                            @change="sortingByPrices"
+                            v-model="prices"
+                            range
+                            show-stops
+                            :step="300"
+                            :marks="marks"
+                            :max="3000">
+                    </el-slider>
+                    <div class="home__filters-price_selected">
+                        <span>{{prices[0]}}-{{prices[1]}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="home__body">
             <div class="products">
-                <el-card shadow="hover" v-for="product in productsData" :key="product._id">
-                    <div class="products__item">
-                        <img :src="`${host}/image/${product.images[0]}`" alt="">
-                        <div class="products__item-name">
-                            <span>{{product.name}}</span>
-                        </div>
-                        <div class="products__item-body">
-                            <span>{{product.description}}</span>
-                        </div>
-                        <div class="products__item-footer">
-                            <div class="products__item-price">
-                                <span><del>ddf</del></span>
-                            </div>
-                            <div class="products__item-btn">
-                                <el-button @click="addToCart" size="mini" type="success">В корзину</el-button>
-                            </div>
-                        </div>
-                    </div>
-                </el-card>
+                <div class="products__item" v-for="product in productsData" :key="product._id">
+                    <product-card :product="product"></product-card>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {mapGetters, mapActions, mapState} from 'vuex'
+    import {mapGetters, mapActions} from 'vuex'
+    import ProductCard from "./ProductCard";
 
     export default {
         name: "MainPage",
-        components: {},
+        components: {ProductCard},
         mounted() {
             this.isLoading = true;
             this.$store.commit('pages/setSideBarActive', 'main');
@@ -65,7 +75,17 @@
                 fit: 'fill',
                 isLoading: false,
                 value: 'Все категории',
-                productsData: []
+                productsData: [],
+                prices: [300, 900],
+                marks: {
+                    0: '0',
+                    300: '300',
+                    900: '900',
+                    1500: '1500',
+                    2100: '2100',
+                    3000: '3000'
+                }
+
             }
         },
         watch: {
@@ -74,12 +94,11 @@
             }
         },
         computed: {
-            ...mapState(['host']),
             ...mapGetters('products', ['categories'])
         },
         methods: {
             ...mapActions('products', ['loadData']),
-            ...mapGetters('products', ['products', 'productsByCategory']),
+            ...mapGetters('products', ['products', 'productsByCategory', 'productsByPrice']),
             isValidResponse(status, isFirstLoad = true) {
                 if (status !== 200) {
                     this.$notify.error({
@@ -97,37 +116,64 @@
                 }
             },
             refreshData() {
-                this.isLoading = true
+                this.isLoading = true;
                 this.loadData().then(status => {
                     this.isLoading = false;
                     const isValid = this.isValidResponse(status, false);
                     if (isValid)
-                        this.productsData = this.products()
+                        this.productsData = this.products();
                 })
             },
             sortingByCategory(category) {
                 this.productsData = this.productsByCategory()(category);
             },
-            addToCart() {
-                console.log('asd')
+            sortingByPrices(priceArray) {
+                this.isLoading = true;
+                this.productsData = this.productsByPrice()(priceArray);
+                setTimeout(() => {
+                    this.isLoading = false;
+                }, 500);
             }
         }
     }
 </script>
 
-<style lang="scss">
-    .home__header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+<style lang="scss" scoped>
+    .cross {
+        text-decoration: line-through;
+        font-size: 0.9rem !important;
+        color: #909399 !important
+    }
 
-        > .el-select {
-            margin-right: 15px !important;
+    .home {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+
+        &__filters {
+            position: fixed;
         }
 
-        > .el-input {
-            margin-left: 15px;
-            width: 200px;
+        &__filters-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            width: 20%;
+        }
+
+        &__filters-price {
+            margin-top: 15px;
+        }
+
+        &__filters-price_selected {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        &__body {
+            margin-top: 15px;
+            width: 80%;
         }
     }
 
@@ -136,52 +182,9 @@
         flex-wrap: wrap;
         justify-content: space-around;
 
-        > .el-card {
-            background-color: rgba(255, 125, 93, 0.17);
-            margin: 20px;
-        }
-
         &__item {
-            width: 350px;
-
-            &-name {
-                text-align: left;
-                margin-top: 10px;
-            }
-
-            &-body {
-                text-align: left;
-                margin-top: 20px;
-            }
-
-            &-footer {
-                margin-top: 15px;
-                flex-grow: 0;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            &-btn {
-                span {
-                    font-size: 1rem;
-                    letter-spacing: 1px
-                }
-            }
-
-            &-price {
-                span {
-                    font-weight: 600;
-                    font-size: 1.2rem;
-                    color: #E6A23C;
-                }
-            }
-
-            > img {
-                width: 100%;
-                height: 300px;
-                object-fit: fill;
-            }
+            margin-bottom: 20px;
         }
     }
+
 </style>

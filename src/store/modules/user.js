@@ -48,14 +48,53 @@ const mutations = {
         state.user.email = null;
     },
     addToCart(state, product) {
-        if (!state.user.cart.includes(product))
-            state.user.cart.push(product)
+        let isAdded = false
+        state.user.cart.forEach((item, index) => {
+            if (item.name === product.name) {
+                state.user.cart[index].count++;
+                isAdded = true;
+            }
+        })
+        if (!isAdded) state.user.cart.push({...product, count: 1});
+    },
+    removeFromCart(state, product) {
+        state.user.cart.forEach((item, index) => {
+            if (item.name === product.name) {
+                if (item.count === 1) state.user.cart.splice(index, 1);
+                else state.user.cart[index].count--;
+            }
+        })
+    },
+    removeCompletely(state, product) {
+        state.user.cart.forEach((item, index) => {
+            if(item.name === product.name) {
+                state.user.cart.splice(index, 1)
+            }
+        })
     }
 };
 
 const getters = {
+    lengthUserCart(state) {
+        return state.user.cart.reduce((accumulator, current) =>
+            accumulator + current.count,
+            0
+        );
+    },
     userCart(state) {
-        return state.user.cart
+        return state.user.cart;
+    },
+    isAddedToCart: state => product => {
+        for (let i = 0; i < state.user.cart.length; ++i)
+            if (product.name === state.user.cart[i].name) return true;
+
+        return false;
+    },
+    amountOfProduct: state => product => {
+        for (let i = 0; i < state.user.cart.length; ++i)
+            if (state.user.cart[i].name === product.name) return state.user.cart[i].count;
+
+        return 0;
     }
 };
 
@@ -69,7 +108,6 @@ const actions = {
         };
         return axios(options).then(response => {
             commit('saveUser', {...response.data, email: userData.email})
-            console.log(response.data)
             return response
         }).catch(error => {
             return error.response

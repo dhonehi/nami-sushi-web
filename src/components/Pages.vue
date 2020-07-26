@@ -28,7 +28,6 @@
 <style lang="scss" scoped>
     .pages-wrapper {
         width: 100%;
-        height: 100%;
         margin-top: 80px;
     }
 
