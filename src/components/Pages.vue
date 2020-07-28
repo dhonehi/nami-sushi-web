@@ -1,8 +1,8 @@
 <template>
     <div>
         <top-bar/>
-        <div class="pages-wrapper">
-            <div class="page-content">
+        <div class="pages">
+            <div class="pages__content">
                 <router-view />
             </div>
         </div>
@@ -21,13 +21,39 @@
 </script>
 
 <style lang="scss" scoped>
-    .pages-wrapper {
+    .pages {
         width: 100%;
         margin-top: 80px;
+
+        &__content {
+            margin: 0 auto;
+            max-width: 1130px;
+
+            @media screen and (max-width: 860px) {
+                width: 800px;
+            }
+        }
     }
 
     .page-content {
         margin: 0 auto;
         max-width: 1130px;
+
+        @media screen and (max-width: 1000px) {
+            margin-left: 10px;
+        }
+
+        /*@media screen and (max-width: 1150px) {
+            width: 1000px;
+        }*/
+
+        /*@media screen and (max-width: 930px) {
+            width: 850px;
+        }
+        @media screen and (max-width: 860px) {
+            max-width: 100%;
+            width: 100%;
+            margin-left: 10px;
+        }*/
     }
 </style>

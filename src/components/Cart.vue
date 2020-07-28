@@ -1,7 +1,7 @@
 <template>
     <div class="cart">
         <div class="cart__body">
-            <h1 v-if="userCart.length === 0">Здесь ничего нет</h1>
+            <h1 style="display: block" v-if="userCart.length === 0">Здесь ничего нет</h1>
             <table v-else class="cart-table" style="background-color: white; width: 100%">
                 <thead>
                 <tr>

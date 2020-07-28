@@ -43,7 +43,8 @@
         color: #2c3e50;
         width: 100%;
         min-height: 100vh;
-        background-color: #F2ECE9;
+        /*background-color: #F2ECE9;*/
+        background: url("assets/img/bg.jpg") 0 0 no-repeat fixed;
     }
 
 </style>

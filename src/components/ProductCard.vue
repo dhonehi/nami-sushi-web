@@ -96,11 +96,14 @@
         width: 415px;
         border: 1px solid #DCDFE6 !important;
 
-        @media screen and (max-width: 1110px) {
+        @media screen and (max-width: 1150px) {
             width: 350px;
         }
         @media screen and (max-width: 1000px) {
             width: 300px;
+        }
+        @media screen and (max-width: 860px) {
+            width: 415px;
         }
 
         &__img {
@@ -108,8 +111,14 @@
             height: 300px;
             object-fit: cover;
 
-            @media screen and (max-width: 1110px) {
+            @media screen and (max-width: 1150px) {
                 height: 250px;
+            }
+            @media screen and (max-width: 1000px) {
+                height: 200px;
+            }
+            @media screen and (max-width: 860px) {
+                height: 300px;
             }
         }
 
@@ -120,11 +129,17 @@
         }
 
         &__name {
+            color: #374376;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 1.3em;
             text-align: left;
             margin-top: 10px;
         }
 
         &__description {
+            font-style: italic;
+            font-weight: 400;
             text-align: left;
             margin-top: 25px;
         }

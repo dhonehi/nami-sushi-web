@@ -62,7 +62,8 @@
                 this.isLoading = false;
                 const isValid = this.isValidResponse(status);
                 if (isValid) {
-                    this.productsData = this.products()
+                    this.currentCategory = this.categories[0].name;
+                    this.productsData = this.productsByCategory()(this.currentCategory);
                 }
             })
         },
@@ -73,6 +74,7 @@
                 isLoading: false,
                 value: 'Все категории',
                 productsData: [],
+                currentCategory: '',
                 prices: [300, 900],
                 marks: {
                     0: '0',
@@ -88,12 +90,12 @@
         computed: mapGetters('products', ['categories']),
         watch: {
             search(newValue) {
-                this.productsData = this.products().filter(data => data.name.toLowerCase().includes(newValue.toLowerCase()))
+                this.productsData = this.productsByCategory()(this.currentCategory).filter(data => data.name.toLowerCase().includes(newValue.toLowerCase()))
             }
         },
         methods: {
             ...mapActions('products', ['loadData']),
-            ...mapGetters('products', ['products', 'productsByCategory', 'productsByPrice']),
+            ...mapGetters('products', ['productsByCategory', 'productsByPrice']),
             isValidResponse(status, isFirstLoad = true) {
                 if (status !== 200) {
                     this.$notify.error({
@@ -130,31 +132,54 @@
                 }, 500);
             },
             setActive(categoryIndex) {
+                this.currentCategory = this.categories[categoryIndex].name;
                 this.$refs["category-ref"].forEach((item, index) => {
                     if (index === categoryIndex)
-                        item.classList.add('category__name_active')
+                        item.classList.add('category__name_active');
                     else
-                        item.classList.remove('category__name_active')
+                        item.classList.remove('category__name_active');
                 })
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .main-page {
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-around;
 
+        @media screen and (max-width: 860px) {
+            justify-content: center;
+        }
+
         .sidebar {
             display: flex;
             justify-content: center;
             width: 20%;
+            max-width: 20%;
+            flex-shrink: 0;
+
+            &__search {
+                .el-input__inner {
+                    height: 35px;
+                    line-height: 35px;
+                }
+            }
+
+            .el-divider {
+                background-color: black;
+
+                &--horizontal {
+                    height: 1px;
+                }
+            }
 
             &__content {
-                margin-top: 20px;
+                margin: 20px 0 0 10px;
                 position: fixed;
+                max-width: inherit;
             }
 
             .price {
@@ -183,7 +208,8 @@
                 }
 
                 &__name {
-                    font-weight: 400;
+                    font-weight: 700;
+                    font-size: 1em;
                     letter-spacing: 1px;
                     text-align: start;
                     padding: 15px 25px;
@@ -205,6 +231,10 @@
         &__body {
             margin-top: 15px;
             width: 80%;
+
+            @media screen and (max-width: 860px) {
+                width: 60%;
+            }
 
             .products {
                 display: flex;
