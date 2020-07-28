@@ -96,9 +96,21 @@
         width: 415px;
         border: 1px solid #DCDFE6 !important;
 
+        @media screen and (max-width: 1110px) {
+            width: 350px;
+        }
+        @media screen and (max-width: 1000px) {
+            width: 300px;
+        }
+
         &__img {
             width: 100%;
             height: 300px;
+            object-fit: cover;
+
+            @media screen and (max-width: 1110px) {
+                height: 250px;
+            }
         }
 
         &__fav {

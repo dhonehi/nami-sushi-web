@@ -1,8 +1,8 @@
 <template>
-    <div class="home" v-loading.fullscreen="isLoading">
-        <div class="home__filters-container">
-            <div class="home__filters">
-                <div class="home__filters-search">
+    <div class="main-page" v-loading.fullscreen="isLoading">
+        <div class="sidebar">
+            <div class="sidebar__content">
+                <div class="sidebar__search">
                     <el-input
                             size="mini"
                             placeholder="Поиск..."
@@ -11,19 +11,16 @@
                     </el-input>
                 </div>
                 <el-divider></el-divider>
-                <div class="home__filters-category">
-                    <el-select @change="sortingByCategory" style="margin: 15px 0" size="mini" v-model="value"
-                               placeholder="Категории">
-                        <el-option
-                                v-for="item in categories"
-                                :key="item._id"
-                                :label="item.name"
-                                :value="item.name">
-                        </el-option>
-                    </el-select>
-                </div>
-                <div class="home__filters-price">
-                    <div class="home__filters-price-header">
+                <ul class="category">
+                    <li class="category__item" v-for="(item, index) in categories" :key="item.name"
+                        @click="sortingByCategory(item.name); setActive(index)">
+                        <span ref="category-ref" class="category__name" :class="{'category__name_active': index===0}">
+                            {{item.name}}
+                        </span>
+                    </li>
+                </ul>
+                <!--<div class="price">
+                    <div class="price__header">
                         <span>Цена</span>
                     </div>
                     <el-slider
@@ -35,13 +32,13 @@
                             :marks="marks"
                             :max="3000">
                     </el-slider>
-                    <div class="home__filters-price_selected">
+                    <div class="price__select">
                         <span>{{prices[0]}}-{{prices[1]}}</span>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
-        <div class="home__body">
+        <div class="main-page__body">
             <div class="products">
                 <div class="products__item" v-for="product in productsData" :key="product._id">
                     <product-card :product="product"></product-card>
@@ -88,13 +85,11 @@
 
             }
         },
+        computed: mapGetters('products', ['categories']),
         watch: {
             search(newValue) {
                 this.productsData = this.products().filter(data => data.name.toLowerCase().includes(newValue.toLowerCase()))
             }
-        },
-        computed: {
-            ...mapGetters('products', ['categories'])
         },
         methods: {
             ...mapActions('products', ['loadData']),
@@ -133,58 +128,93 @@
                 setTimeout(() => {
                     this.isLoading = false;
                 }, 500);
+            },
+            setActive(categoryIndex) {
+                this.$refs["category-ref"].forEach((item, index) => {
+                    if (index === categoryIndex)
+                        item.classList.add('category__name_active')
+                    else
+                        item.classList.remove('category__name_active')
+                })
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    .cross {
-        text-decoration: line-through;
-        font-size: 0.9rem !important;
-        color: #909399 !important
-    }
-
-    .home {
+    .main-page {
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-around;
 
-        &__filters {
-            position: fixed;
-        }
-
-        &__filters-container {
+        .sidebar {
             display: flex;
             justify-content: center;
-            margin-top: 25px;
             width: 20%;
-        }
 
-        &__filters-price {
-            margin-top: 15px;
-        }
+            &__content {
+                margin-top: 20px;
+                position: fixed;
+            }
 
-        &__filters-price_selected {
-            margin-top: 20px;
-            text-align: left;
-            font-size: 0.8rem;
+            .price {
+                &__header {
+                    margin-top: 15px;
+                }
+
+                &__select {
+                    margin-top: 20px;
+                    text-align: left;
+                    font-size: 0.8rem;
+                }
+            }
+
+            .category {
+                padding: 0;
+                list-style: none;
+                background-color: white;
+                border-radius: 5px;
+                box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .15);
+
+                &__item {
+                    cursor: pointer;
+                    width: 100%;
+                    border-bottom: 1px solid #efefef;
+                }
+
+                &__name {
+                    font-weight: 400;
+                    letter-spacing: 1px;
+                    text-align: start;
+                    padding: 15px 25px;
+                    color: #332f2e;
+                    text-transform: uppercase;
+                    display: block;
+
+                    &:hover {
+                        color: #da4038;
+                    }
+
+                    &_active {
+                        color: red;
+                    }
+                }
+            }
         }
 
         &__body {
             margin-top: 15px;
             width: 80%;
+
+            .products {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+
+                &__item {
+                    margin-bottom: 20px;
+                }
+            }
         }
     }
-
-    .products {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-
-        &__item {
-            margin-bottom: 20px;
-        }
-    }
-
 </style>

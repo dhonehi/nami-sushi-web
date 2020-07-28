@@ -29,13 +29,10 @@ const getters = {
     products(state) {
         return state.products;
     },
-    productsByCategory: state => (category = 'Все категории') => {
-        if (category === 'Все категории')
-            return state.products;
-        else
-            return state.products.filter(product =>
-                product.categories.some(item => item.name === category)
-            )
+    productsByCategory: state => category => {
+        return state.products.filter(product =>
+            product.categories.some(item => item.name === category)
+        )
     },
     productsByPrice: state => priceArray => {
         return state.products.filter(product =>
@@ -43,7 +40,6 @@ const getters = {
         )
     },
     categories(state) {
-        state.categories.unshift({_id: 'all', name: 'Все категории'})
         return state.categories;
     }
 }
