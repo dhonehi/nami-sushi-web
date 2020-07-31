@@ -1,6 +1,6 @@
 <template>
     <div>
-        <top-bar/>
+        <top-bar2/>
         <div class="pages">
             <div class="pages__content">
                 <router-view />
@@ -10,12 +10,12 @@
 </template>
 
 <script>
-    import TopBar from "@/components/TopBar";
+    import TopBar2 from "@/components/TopBar2";
 
     export default {
         name: "pages",
         components: {
-            TopBar
+            TopBar2
         }
     }
 </script>
@@ -24,6 +24,10 @@
     .pages {
         width: 100%;
         margin-top: 80px;
+
+        @media screen and (max-width: 600px) {
+            margin-top: 58px;
+        }
 
         &__content {
             margin: 0 auto;
