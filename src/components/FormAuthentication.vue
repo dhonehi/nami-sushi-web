@@ -69,7 +69,8 @@
             submitForm: function (formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                       const authJson = JSON.stringify(this.authForm);
+                        this.$router.push('/')
+                       /*const authJson = JSON.stringify(this.authForm);
 
                         this.$store.dispatch('user/logIn', authJson).then(response => {
                             this.isLoading = false;
@@ -85,7 +86,7 @@
                                     message: 'Что-то пошло не так!'
                                 });
                             }
-                        })
+                        })*/
                     } else {
                         console.log('error submit!!');
                         return false;

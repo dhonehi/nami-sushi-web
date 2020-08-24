@@ -28,6 +28,7 @@
     /* Set core body defaults */
     body {
         min-height: 100vh;
+        min-width: 100vw;
         scroll-behavior: smooth;
         text-rendering: optimizeSpeed;
         line-height: 1.5;
@@ -52,7 +53,7 @@
 <script>
     export default {
         mounted() {
-            if (!this.$store.state.user.user.isLoggedIn) this.$router.push('login');
+            //if (!this.$store.state.user.user.isLoggedIn) this.$router.push('login');
         }
     }
 </script>

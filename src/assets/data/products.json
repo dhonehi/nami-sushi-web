@@ -1,0 +1,112 @@
+[
+  {
+    "_id": 1,
+    "active": true,
+    "name": "Товар №1",
+    "featured": false,
+    "description": "Описание товара №1",
+    "short_description": "",
+    "price": 300,
+    "regular_price": 200,
+    "sale_price": 200,
+    "price_html": "",
+    "on_sale": true,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "active": true,
+    "name": "Товар №2",
+    "featured": false,
+    "description": "Описание товара №2",
+    "short_description": "",
+    "price": 300,
+    "regular_price": 300,
+    "sale_price": 300,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
+      }
+    ]
+  },
+  {
+    "_id": 3,
+    "active": true,
+    "name": "Товар №3",
+    "featured": false,
+    "description": "Описание товара №3",
+    "short_description": "",
+    "price": 400,
+    "regular_price": 400,
+    "sale_price": 400,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
+      }
+    ]
+  },
+  {
+    "_id": 4,
+    "active": true,
+    "name": "Товар №4",
+    "featured": false,
+    "description": "Описание товара №4",
+    "short_description": "",
+    "price": 200,
+    "regular_price": 200,
+    "sale_price": 200,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
+      }
+    ]
+  },
+  {
+    "_id": 5,
+    "active": true,
+    "name": "Товар №5",
+    "featured": false,
+    "description": "Описание товара №5",
+    "short_description": "",
+    "price": 300,
+    "regular_price": 300,
+    "sale_price": 300,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 2,
+        "name": "Категория 2"
+      }
+    ]
+  }
+]

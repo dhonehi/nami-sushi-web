@@ -14,15 +14,13 @@ const state = () => ({
         price_html: '',
         on_sale: false,
         images: [],
-        categories: {
+        /*categories: {
             _id: '',
             name: ''
-        },
+        },*/
+        categories: []
     }],
-    categories: [{
-        _id: '',
-        name: ''
-    }]
+    categories: []
 })
 
 const getters = {
@@ -48,6 +46,10 @@ const mutations = {
     saveData(state, data) {
         state.products = data[0].data;
         state.categories = data[1].data;
+    },
+    saveDataL(state, data) {
+        state.products = data[0];
+        state.categories = data[1];
     }
 }
 
@@ -64,6 +66,21 @@ const actions = {
             return 200;
         }).catch(() => {
             return 401
+        })
+    },
+    loadDataL({commit}) {
+        const products = require('../../assets/data/products.json');
+        const categories = require('../../assets/data/categories.json');
+
+        products.forEach(product => {
+            if (product.on_sale) product.regular_price = product.sale_price
+        })
+
+        return new Promise((resolve => {
+            resolve()
+        })).then(() => {
+            commit('saveDataL', [products, categories])
+            return 200;
         })
     }
 }

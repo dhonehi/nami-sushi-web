@@ -1,6 +1,6 @@
 <template>
     <div class="main-page" v-loading.fullscreen.lock="isLoading">
-        <div v-if="categories.length !== 0" class="sidebar">
+        <div class="sidebar" v-if="categories.length !== 0 && windowWidth >= 600">
             <div class="sidebar__content">
                 <div class="sidebar__search">
                     <el-input
@@ -19,23 +19,6 @@
                         </span>
                     </li>
                 </ul>
-                <!--<div class="price">
-                    <div class="price__header">
-                        <span>Цена</span>
-                    </div>
-                    <el-slider
-                            @change="sortingByPrices"
-                            v-model="prices"
-                            range
-                            show-stops
-                            :step="300"
-                            :marks="marks"
-                            :max="3000">
-                    </el-slider>
-                    <div class="price__select">
-                        <span>{{prices[0]}}-{{prices[1]}}</span>
-                    </div>
-                </div>-->
             </div>
         </div>
         <div class="main-page__body">
@@ -53,12 +36,12 @@
     import ProductCard from "./ProductCard";
 
     export default {
-        name: "MainPage",
+        name: "main-page1",
         components: {ProductCard},
         mounted() {
-            //this.isLoading = true;
+            /*this.isLoading = true;
             this.$store.commit('pages/setTopBarActive', {path: '/main', index: 0});
-            /*this.loadData().then(status => {
+            this.loadData().then(status => {
                 this.isLoading = false;
                 const isValid = this.isValidResponse(status);
                 if (isValid) {
@@ -66,11 +49,27 @@
                     this.productsData = this.productsByCategory()(this.currentCategory);
                 }
             })*/
+            this.isLoading = true;
+            this.$store.commit('pages/setTopBarActive', {path: '/main', index: 0});
+            this.loadDataL().then(status => {
+                setTimeout(() => {
+                    this.isLoading = false;
+                    const isValid = this.isValidResponse(status);
+                    if (isValid) {
+                        this.currentCategory = this.categories[0].name;
+                        this.productsData = this.productsByCategory()(this.currentCategory);
+                    }
+                }, 500)
+            })
+            window.addEventListener('resize', this.updateWidth);
+            this.updateWidth();
+
         },
         data() {
             return {
                 search: '',
                 fit: 'fill',
+                windowWidth: 0,
                 isLoading: false,
                 value: 'Все категории',
                 productsData: [],
@@ -94,7 +93,7 @@
             }
         },
         methods: {
-            ...mapActions('products', ['loadData']),
+            ...mapActions('products', ['loadDataL']),
             ...mapGetters('products', ['productsByCategory', 'productsByPrice']),
             isValidResponse(status, isFirstLoad = true) {
                 if (status !== 200) {
@@ -139,6 +138,10 @@
                     else
                         item.classList.remove('category__name_active');
                 })
+            },
+            updateWidth() {
+                this.windowWidth = window.innerWidth;
+                console.log(this.windowWidth);
             }
         }
     }
@@ -157,8 +160,8 @@
         .sidebar {
             display: flex;
             justify-content: center;
-            width: 20%;
-            max-width: 20%;
+            width: 250px;
+            max-width: 250px;
             flex-shrink: 0;
 
             &__search {
@@ -236,6 +239,10 @@
                 width: 60%;
             }
 
+            @media screen and (max-width: 600px) {
+                width: 100%;
+            }
+
             .products {
                 display: flex;
                 flex-wrap: wrap;
@@ -243,6 +250,21 @@
 
                 &__item {
                     margin-bottom: 20px;
+
+                    @media screen and (max-width: 860px) {
+                        width: 100%;
+                        margin-right: 15px;
+                    }
+
+                    @media screen and (max-width: 600px) {
+                        margin-left: 15px;
+                    }
+
+                    .product-card {
+                        @media screen and (max-width: 860px) {
+                            width: 100%;
+                        }
+                    }
                 }
             }
         }

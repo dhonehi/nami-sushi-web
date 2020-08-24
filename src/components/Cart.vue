@@ -20,7 +20,8 @@
                     </td>
                     <td class="cart-table__cell cart-table__cell_border-bottom"
                         :class="{'cart-table__cell_border-top': index===0}">
-                        <img class="cart__img" :src="`${host}/image/${product.images[0]}`">
+                        <!--<img class="cart__img" :src="`${host}/image/${product.images[0]}`">-->
+                        <img class="cart__img" :src="require(`../assets/data/${product.images[0]}`)">
                     </td>
                     <td class="cart-table__cell cart-table__cell_border-bottom"
                         :class="{'cart-table__cell_border-top': index===0}">
@@ -50,7 +51,7 @@
         name: "cart",
         components: {VerticalSelect, DeleteIcon},
         mounted() {
-            this.$store.commit('pages/setSideBarActive', 'cart')
+            this.$store.commit('pages/setTopBarActive',{path: '/cart', index: 2})
         },
         computed: {
             ...mapGetters('user', ['userCart']),

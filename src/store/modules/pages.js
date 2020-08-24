@@ -1,19 +1,17 @@
 const state = () => ({
-    sideBarActive: 'main'
+    topBarActive: {
+        path: '/main',
+        index: 0
+    }
+
 });
 const mutations = {
-    setSideBarActive(state, active) {
-        state.sideBarActive = active
-    }
-};
-const getters = {
-    sideBarActive(state) {
-        return state.sideBarActive
+    setTopBarActive(state, page) {
+        state.topBarActive = page
     }
 };
 export default {
     namespaced: true,
     state,
-    getters,
     mutations
 };

@@ -1,50 +1,104 @@
 <template>
-    <header ref="top-bar-ref" class="top-bar">
+    <header class="top-bar">
         <el-drawer
+                class="drawer"
                 :before-close="closeDrawer"
-                :size="'60%'"
-                title="I am the title"
+                :size="'80%'"
                 :visible.sync="isOpenMenu"
                 :direction="direction">
-            <span>Hi, there!</span>
+            <div class="drawer__img">
+                <el-avatar :size="size" :src="circleUrl"></el-avatar>
+            </div>
+            <div class="drawer__user-name">
+                <span>{{user.name}}</span>
+            </div>
+            <div class="drawer__user-info">
+                <div class="column">
+                    <div class="column__top">
+                        <span>00</span>
+                    </div>
+                    <div class="column__bottom">
+                        <span>Мои заказы</span>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="column__top">
+                        <span>00</span>
+                    </div>
+                    <div class="column__bottom">
+                        <span>Корзина</span>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="column__top">
+                        <span>00</span>
+                    </div>
+                    <div class="column__bottom">
+                        <span>Избранное</span>
+                    </div>
+                </div>
+            </div>
+            <div class="drawer__app-logo">
+                <img src="../assets/img/logo1.png">
+            </div>
         </el-drawer>
         <img class="top-bar__logo" src="../assets/img/logo.png">
         <nav class="menu">
             <ul class="menu__list">
-                <li :class="[isDesktop ? 'menu__item_desktop' : 'menu__item_mobile']"
-                    class="menu__item menu__item_state_active">Главная
+                <li class="menu__item" @click="setPage('/main')">
+                    <span>Главная</span>
                 </li>
-                <li :class="[isDesktop ? 'menu__item_desktop' : 'menu__item_mobile']" class="menu__item">Избранное</li>
-                <li :class="[isDesktop ? 'menu__item_desktop' : 'menu__item_mobile']" class="menu__item">Корзина</li>
-                <li :class="[isDesktop ? 'menu__item_desktop' : 'menu__item_mobile']" class="menu__item">Выйти</li>
-                <li :class="[isDesktop ? 'menu__item_desktop' : 'menu__item_mobile']" class="menu__item icon"
-                    @click="openDrawer">
-                    <img src="../assets/img/menu.png" alt="">
+                <li class="menu__item" @click="setPage('/favourites')">
+                    <span>Избранное</span>
                 </li>
-                <li class="menu__item icon"><i class="el-icon-search"></i></li>
+                <li class="menu__item" @click="setPage('/cart')">
+                    <el-badge class="menu__item-badge" v-if="lengthUserCart > 0 && windowWidth > 600" :max="99"
+                              :value="lengthUserCart"
+                              type="primary">
+                    </el-badge>
+                    <span>Корзина</span>
+                </li>
+                <li class="menu__item" @click="setPage('/logout')">
+                    Выйти
+                </li>
+                <li class="menu__item menu__icon" @click="openDrawer">
+                    <el-badge class="menu__item-badge menu__item-badge_pos_dot" is-dot v-if="lengthUserCart > 0"
+                              type="primary"></el-badge>
+                    <i class="el-icon-s-unfold"></i>
+                </li>
+                <li class="menu__item menu__icon">
+                    <i class="el-icon-search"></i>
+                </li>
             </ul>
         </nav>
     </header>
 </template>
 
 <script>
-    import {mapGetters} from 'vuex'
+    import {mapGetters, mapState} from 'vuex'
 
     export default {
         name: "top-bar1",
         computed: {
             ...mapGetters('user', ['lengthUserCart']),
-            ...mapGetters('pages', ['sideBarActive'])
+            ...mapState('user', ['user']),
+            ...mapState('pages', ['topBarActive']),
         },
         data() {
             return {
                 isOpenMenu: false,
                 direction: 'ltr',
-                isDesktop: true
+                data: '',
+                size: 100,
+                circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+                topBar: {},
+                windowWidth: 0
             }
         },
-        created() {
+        mounted() {
             window.addEventListener('resize', this.updateWidth);
+            this.topBar = document.getElementsByClassName('top-bar')[0];
+            this.updateWidth();
         },
         methods: {
             handleSelect: function (key) {
@@ -57,49 +111,125 @@
             },
             openDrawer() {
                 this.isOpenMenu = !this.isOpenMenu;
-                this.$refs['top-bar-ref'].style.position = 'static';
+                this.topBar.style.position = 'static';
             },
             closeDrawer(done) {
                 done();
                 this.isOpenMenu = false;
-                this.$refs['top-bar-ref'].style.position = 'fixed';
+                this.topBar.style.position = 'fixed';
             },
             updateWidth() {
-                if (window.innerWidth > 600) {
+                this.windowWidth = window.innerWidth
+                if (this.windowWidth > 600) {
                     this.isOpenMenu = false;
-                    this.isDesktop = true;
-                    this.$refs['top-bar-ref'].style.position = 'fixed';
-                } else {
-                    this.isDesktop = false;
+                    this.topBar.style.position = 'fixed';
                 }
+            },
+            setPage(page) {
+                if (page === '/logout') {
+                    this.$store.commit('user/logOut')
+                    this.$router.push('/login')
+                } else {
+                    this.$router.push(page);
+                }
+            }
+        },
+        watch: {
+            topBarActive(newPage, oldPage) {
+                const el = this.topBar.getElementsByClassName('menu__item')
+                el[oldPage.index].classList.remove('menu__item_state_active');
+                el[newPage.index].classList.add('menu__item_state_active')
             }
         }
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+    .menu__item:after {
+        content: '';
+        display: block;
+        height: 2px;
+        margin-top: 5px;
+        width: 0;
+        background-color: red;
+        transition: width 0.5s ease-out;
+    }
+
+    .menu__item:hover:after,
+    .menu:focus:after {
+        width: 100%;
+    }
+
+    .menu__item_state_active:after {
+        width: 100%;
+    }
+
+    .drawer {
+        &__user-name {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        &__user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding: 0 10px;
+            height: 11vw;
+            background-color: #dddddd;
+
+            .column {
+                display: flex;
+                flex-direction: column;
+                font-weight: 600;
+                font-size: 3vw;
+
+                &__top {
+                    color: #409EFF;
+                    flex-grow: 1;
+                }
+            }
+        }
+
+        &__app-logo {
+            margin-top: 80px;
+
+            img {
+                width: 60%;
+                min-width: 150px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 300px) {
+        .drawer {
+            &__user-info {
+                height: 33px;
+            }
+
+            .column {
+                font-size: 0.6rem;
+            }
+        }
+    }
+
     .top-bar {
         display: flex;
         justify-content: space-around;
+        align-items: center;
         height: 80px;
         width: 100vw;
         top: 0;
         z-index: 1;
         background-color: #ffffff;
-
-        &_display_block {
-            display: block !important;
-        }
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+        border-bottom: 1px solid #DCDFE6;
 
         &__logo {
             display: block;
-            margin-top: 10px;
             width: 165px;
             height: 59px;
-
-            &_invisible {
-                display: none;
-            }
         }
     }
 
@@ -108,48 +238,45 @@
             background-color: white;
             overflow: hidden;
             cursor: pointer;
-            margin-top: 15px;
             padding: 0;
             width: 100%;
 
-            .icon {
+            .menu__icon {
                 display: none;
             }
         }
 
         &__item {
             float: left;
+            position: relative;
             display: block;
             color: black;
             text-align: center;
-            padding: 14px 10px;
+            padding: 14px 16px;
+            margin-left: 10px;
+            font-size: 17px;
 
-            &_mobile {
-                font-size: 20px;
-                cursor: default;
-
-                &:last-child {
-                    cursor: pointer;
-
-                    &:hover {
-                        background-color: #ddd;
-                    }
-                }
-            }
-
-            &_desktop {
-                padding: 14px 16px;
-                font-size: 18px;
-
-                &:hover {
-                    background-color: #ddd;
-                    color: black;
-                }
+            &:hover {
+                //background-color: #ddd;
+                color: black;
             }
 
             &_state_active {
-                background-color: #4CAF50;
-                color: white;
+                //background-color: #4CAF50;
+                //background-color: #409EFF;
+                //color: white;
+                color: black;
+            }
+
+            &-badge {
+                position: absolute !important;
+                right: 0;
+                top: 2px;
+
+                &_pos_dot {
+                    right: -3px;
+                    top: -10px;
+                }
             }
         }
     }
@@ -157,40 +284,66 @@
 
     @media screen and (max-width: 600px) {
         .top-bar {
-            justify-content: space-between !important;
-
-            &__logo {
-                display: none;
-            }
+            height: 58px;
         }
-
-        .menu {
-            width: 100%;
-            &__list {
-                display: flex;
-            }
-        }
-
-        .menu__item:not(.menu__item_state_active) {
+        .top-bar__logo {
             display: none;
         }
 
-        .menu__item_state_active {
-            order: 2;
-            background-color: white;
-            color: black;
-        }
+        .menu {
+            height: 100%;
+            width: 100%;
 
-        .menu__list li.icon {
-            order: 1;
-            display: block;
-            margin: 0 !important;
-        }
+            &__list {
+                cursor: default;
+                height: 100%;
+                display: flex;
+                align-items: center;
 
-        li.icon:last-child {
-            order: 3;
-            position: absolute;
-            right: 0;
+                li.menu__icon {
+                    font-size: 25px;
+                    display: block;
+
+                    &:hover {
+                        cursor: pointer;
+                        color: #409EFF;
+                    }
+
+                    &:last-child {
+                        font-weight: 900 !important;
+                        position: absolute;
+                        right: 10px;
+                    }
+                }
+            }
+
+            &__item {
+                padding: 0;
+
+                &:nth-child(5) {
+                    margin-left: 10px;
+                }
+
+                &:hover {
+                    background: none;
+                }
+
+                &:not(&_state_active) {
+                    display: none;
+                }
+
+                &_state_active {
+                    order: 2;
+                    font-size: large;
+                    font-style: normal;
+                    font-weight: 700;
+                    background-color: white;
+                    color: black;
+                    cursor: default;
+                    margin-left: 10px;
+                }
+            }
         }
     }
+
 </style>

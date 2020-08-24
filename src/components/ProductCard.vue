@@ -1,7 +1,7 @@
 <template>
     <el-card class="product-card" shadow="hover">
         <div class="product-card__header">
-            <img class="product-card__img" :src="`${host}/image/${product.images[0]}`" alt="">
+            <img class="product-card__img" :src="require(`../assets/data/${product.images[0]}`)" alt="">
             <el-tooltip popper-class="pop-custom" class="product-card__fav" effect="light" content="В избранное"
                         placement="bottom-end">
                 <el-button size="mini" type="warning" icon="el-icon-star-off" circle></el-button>

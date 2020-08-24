@@ -1,6 +1,6 @@
 <template>
     <div>
-        <top-bar1/>
+        <top-bar/>
         <div class="pages">
             <div class="pages__content">
                 <router-view />
@@ -10,12 +10,12 @@
 </template>
 
 <script>
-    import TopBar1 from "@/components/TopBar1";
+    import TopBar from "@/components/TopBar";
 
     export default {
-        name: "pages",
+        name: "pages1",
         components: {
-            TopBar1
+            TopBar
         }
     }
 </script>
@@ -34,7 +34,7 @@
             max-width: 1130px;
 
             @media screen and (max-width: 860px) {
-                width: 800px;
+                width: 100%;
             }
         }
     }
