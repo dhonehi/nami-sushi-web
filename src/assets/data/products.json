@@ -4,7 +4,7 @@
     "active": true,
     "name": "Товар №1",
     "featured": false,
-    "description": "Описание товара №1",
+    "description": "Описание товара №1 Описание товара №1 Описание товара №1 Описание товара №1 Описание товара №1 Описание товара №1",
     "short_description": "",
     "price": 300,
     "regular_price": 200,
@@ -24,7 +24,7 @@
   {
     "_id": 2,
     "active": true,
-    "name": "Товар №2",
+    "name": "Большое название товара №2",
     "featured": false,
     "description": "Описание товара №2",
     "short_description": "",
@@ -106,6 +106,94 @@
       {
         "_id": 2,
         "name": "Категория 2"
+      }
+    ]
+  },
+  {
+    "_id": 6,
+    "active": true,
+    "name": "Товар №6",
+    "featured": false,
+    "description": "Описание товара №6",
+    "short_description": "",
+    "price": 1200,
+    "regular_price": 1200,
+    "sale_price": 200,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 2,
+        "name": "Категория 2"
+      }
+    ]
+  },
+  {
+    "_id": 7,
+    "active": true,
+    "name": "Товар №7",
+    "featured": false,
+    "description": "Описание товара №7",
+    "short_description": "",
+    "price": 200,
+    "regular_price": 200,
+    "sale_price": 200,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
+      }
+    ]
+  },
+  {
+    "_id": 8,
+    "active": true,
+    "name": "Товар №8",
+    "featured": false,
+    "description": "Описание товара №8",
+    "short_description": "",
+    "price": 1450,
+    "regular_price": 1450,
+    "sale_price": 200,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
+      }
+    ]
+  },
+  {
+    "_id": 9,
+    "active": true,
+    "name": "Товар №9",
+    "featured": false,
+    "description": "Описание товара №9",
+    "short_description": "",
+    "price": 200,
+    "regular_price": 200,
+    "sale_price": 200,
+    "price_html": "",
+    "on_sale": false,
+    "images": [
+      "product.jpg"
+    ],
+    "categories": [
+      {
+        "_id": 1,
+        "name": "Категория 1"
       }
     ]
   }
